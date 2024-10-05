@@ -28,7 +28,7 @@ const setupWebSocket = (wss, problems) => {
                     if (!game) {
                         wsPlayer.sendError("GAME NOT FOUND")
                         return;
-                    } else if (game.status == "IN_PROGRESS") {
+                    } else if (game.status === "IN_PROGRESS") {
                         wsPlayer.sendError("GAME IN PROGRESS")
                         return;
                     }
@@ -51,6 +51,7 @@ const setupWebSocket = (wss, problems) => {
                     if (wsPlayer.currentGame?.status != "IN_PROGRESS") return
 
                     const problemJson = problems.find(x => x.identifier == data.problem);
+
                     await handleCodeSubmission(wsPlayer, data.code, data.language, problemJson);
                     break;
                 }

@@ -17,6 +17,11 @@ class Player {
     currentGame;
 
     /**
+     * @typedef {String} The identifier
+     */
+    identifier;
+
+    /**
      * Player constructor
      * @param {import('ws').WebSocket} ws The websocket connection for this player
      */
