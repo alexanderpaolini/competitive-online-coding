@@ -99,6 +99,12 @@ const setupWebSocket = (wss, problems) => {
 
         ws.on('close', () => {
             const game = wsPlayer.currentGame
+            if (!game) {
+                // I have no idea how it gets here
+                // its fine tho I can just return.
+                // AAAA
+                return
+            }
             const playerIndex = game.players.indexOf(ws);
             game.players.splice(playerIndex, 1);
             logger.log(wsPlayer.identifier, game.code, "LEFT");

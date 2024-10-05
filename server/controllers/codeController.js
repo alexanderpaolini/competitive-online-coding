@@ -54,7 +54,6 @@ const handleCodeSubmission = async (player, code, language, problem) => {
             logger.log(player.identifier, player.currentGame.code, "CODE_RESPONSE", "WIN")
             player.endGame('win')
             
-            
             for (const p of player.currentGame.players) {
                 if (p == player) continue
                 
@@ -64,6 +63,7 @@ const handleCodeSubmission = async (player, code, language, problem) => {
             logger.log(player.currentGame.code, "ENDED")
             player.currentGame.endGame()
         } else {
+            console.log(result.testCasesResult)
             logger.log(player.identifier, player.currentGame.code, "CODE_RESPONSE", "FAIL")
             player.submissionResponse('fail')
         }
