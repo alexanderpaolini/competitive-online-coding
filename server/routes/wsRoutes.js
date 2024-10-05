@@ -1,6 +1,6 @@
 const { handleCodeSubmission } = require('../controllers/codeController');
 const gameController = require('../controllers/gameController');
-const { getRandomProblem, getProblemByIdentifier } = require('../services/problemService');
+const { getRandomProblem, getProblemByIdentifier, createRandomCodingQuestion} = require('../services/problemService');
 const Player = require('../structures/Player');
 const logger = require('../utils/logger');
 
@@ -79,7 +79,9 @@ const setupWebSocket = (wss, problems) => {
                         if (game.players.length >= 1 && game.players.every(x => x.status === "READY")) {
                             logger.log(game.code, "STARTED")
 
-                            const problem = getRandomProblem(problems)
+                            // const problem = getRandomProblem(problems)
+                            const problem = await createRandomCodingQuestion()
+                            console.log(problem)
                             game.startGame(problem)
 
                             for (const p of game.players) {
@@ -108,6 +110,9 @@ const setupWebSocket = (wss, problems) => {
             }
             const playerIndex = game.players.indexOf(ws);
             game.players.splice(playerIndex, 1);
+            if (game.players.length === 0) {
+                game.endGame()
+            }
             logger.log(wsPlayer.identifier, game.code, "LEFT");
         });
     });

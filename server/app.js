@@ -6,10 +6,12 @@ const { setupWebSocket } = require('./routes/wsRoutes');
 const { loadProblems } = require('./services/problemService');
 const apiRoutes = require('./routes/apiRoutes');
 const logger = require('./utils/logger');
+require('dotenv').config()
 
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
+
 
 // Middleware
 app.use(cors());

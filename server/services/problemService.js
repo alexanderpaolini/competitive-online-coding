@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const OpenAI = require('openai');
 
 const loadProblems = () => {
     const problemsDir = path.join(__dirname, '../../problems');
@@ -28,4 +29,55 @@ const getRandomProblem = (problems) => {
     return problems[randomIndex];
 };
 
-module.exports = { loadProblems, getRandomProblem };
+const createRandomCodingQuestion = async () => {
+    const openai = new OpenAI();
+
+    const prompt = `Generate a random coding problem of medium difficulty.
+    The output should be in JSON format with the following structure:
+    Be sure that the problem only uses standard in/out and does not have any unnecessary printing.
+
+    {
+        "title": "Problem Title",
+        "testCases": {
+            "testCaseName": {
+                    "input": "Input String",
+                    "expectedOutput": "Expected Output String"
+            }
+        },
+        "memoryLimit": 500,
+        "timeLimit": 2,
+        "description": "\n# Problem Title\n\nProblem description goes here, explaining what the task is and providing context or requirements for the solution. Make sure to include any constraints or examples to clarify the problem. Use markdown here but DO NOT USE LATEX.\n\n## Example 1\n\nInput:\n\n~~~txt\nExample input goes here\n~~~\n\nOutput:\n\n~~~txt\nExample output goes here\n~~~"
+    }
+    
+    Make sure to produce a VALID JSON. 
+    Notes: 
+    1. Description must only be one line with \n in it.
+    2. Only expect to use stdin.E.X. DO NOT provide arrays in the inputs or outputs.
+    3. Follow the format of the description exactly.
+    4. Remember we are writing programs not functions.
+    5. You must include at least 1-2 examples in the description.`;
+
+    try {
+        const response = await openai.chat.completions.create({
+            model: 'gpt-4o', // Specify the model you want to use
+            messages: [
+                { role: 'system', content: 'You are an assistant that generates random coding questions.' },
+                { role: 'user', content: prompt }
+            ],
+            response_format: {
+                type: 'json_object'
+            },
+            max_tokens: 2000,
+            temperature: 0.7,
+        });
+        console.log(response.choices[0].message.content)
+        return JSON.parse(response.choices[0].message.content);
+    } catch (error) {
+        console.error('Error fetching the coding question:', error);
+        console.error('Trying again.');
+        return createRandomCodingQuestion(); // Recursively retry on error
+    }
+};
+
+
+module.exports = { loadProblems, getRandomProblem, createRandomCodingQuestion };

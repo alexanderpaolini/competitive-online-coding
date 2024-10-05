@@ -11,6 +11,7 @@
   "description": "",
   "dependencies": {
     "cors": "^2.8.5",
+    "openai": "^4.67.1",
     "react-markdown": "^9.0.1",
     "remark-gfm": "^4.0.0"
   }

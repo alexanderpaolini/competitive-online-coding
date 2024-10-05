@@ -12,6 +12,8 @@ const compileCode = async (code, language, testCases, memoryLimit = 500, timeLim
         timeLimit: timeLimit,
     };
 
+    console.log(payload)
+
     try {
         const response = await fetch(url, {
             method: 'POST',
@@ -35,10 +37,10 @@ const compileCode = async (code, language, testCases, memoryLimit = 500, timeLim
 
 /**
  * Handle code submission
- * @param {Player} player 
- * @param {*} code 
- * @param {*} language 
- * @param {*} problem 
+ * @param {Player} player
+ * @param {*} code
+ * @param {*} language
+ * @param {*} problem
  */
 const handleCodeSubmission = async (player, code, language, problem) => {
     const testCases = problem.testCases;
@@ -53,13 +55,13 @@ const handleCodeSubmission = async (player, code, language, problem) => {
 
             logger.log(player.identifier, player.currentGame.code, "CODE_RESPONSE", "WIN")
             player.endGame('win')
-            
+
             for (const p of player.currentGame.players) {
                 if (p == player) continue
-                
+
                 p.endGame('lose')
             }
-            
+
             logger.log(player.currentGame.code, "ENDED")
             player.currentGame.endGame()
         } else {

@@ -100,6 +100,7 @@ function GamePage() {
         e.preventDefault();
 
         setReadyVisible(false);
+        setProblemMarkdown('`loading...`')
 
         // Send a PLAYER_STATUS_UPDATE message
         const message = {
