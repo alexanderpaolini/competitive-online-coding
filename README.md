@@ -1,4 +1,4 @@
-# Competitive Online Programming
+# Competitive Online Coding
 
 Competitive Online Programming (or C.O.C. for short) is a competitive programming site where trials are time-based rather than points based.
 
