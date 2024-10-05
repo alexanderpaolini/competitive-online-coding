@@ -9,6 +9,7 @@ class Game {
         this.code = code; // Unique game code
         this.players = []; // List of players (WebSocket objects)
         this.problem = problem; // Problem for the game, default is empty
+        this.allowedPlayers = []; // List of player identifiers
     }
 
     /**
@@ -21,6 +22,8 @@ class Game {
             if (this.players.length === 2) {
                 this.status = 'IN_PROGRESS';
             }
+            if (!this.allowedPlayers.includes(player.identifier))
+                this.allowedPlayers.push(player.identifier)
         } else {
             throw new Error('Cannot add more players, game is full');
         }
@@ -65,6 +68,15 @@ class Game {
             players: this.players.map(x => x.identifier),
             problem: this.problem
         }
+    }
+
+    /**
+     * Is a player allowed to join back
+     * @param {Player} player The player
+     * @returns true or false idk
+     */
+    isPlayerAllowed(player) {
+        return this.allowedPlayers.includes(player.identifier)
     }
 }
 

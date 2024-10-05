@@ -30,7 +30,11 @@ const setupWebSocket = (wss, problems) => {
                         wsPlayer.sendError("GAME NOT FOUND")
                         return;
                     } else if (game.status === "IN_PROGRESS") {
-                        wsPlayer.sendError("GAME IN PROGRESS")
+                        if (game.isPlayerAllowed(wsPlayer)) {
+                            logger.log(wsPlayer.identifier, game.code, "REJOINED")
+                            wsPlayer.currentGame = game
+                            wsPlayer.ws.send(JSON.stringify({ event: 'GAME_STATUS_UPDATE', status: 'start', problem: wsPlayer.currentGame.problem }))
+                        } else wsPlayer.sendError("GAME IN PROGRESS")
                         return;
                     }
 

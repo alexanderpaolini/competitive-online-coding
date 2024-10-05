@@ -23,7 +23,7 @@ router.post('/games', (req, res) => {
 });
 
 router.get('/games', (req, res) => {
-    try {
+    try {  
         res.status(200).json({
             success: true,
             data: gameController.export()
