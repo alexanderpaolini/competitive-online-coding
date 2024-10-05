@@ -1,6 +1,6 @@
 const { handleCodeSubmission } = require('../controllers/codeController');
 const gameController = require('../controllers/gameController');
-const { getRandomProblem } = require('../services/problemService');
+const { getRandomProblem, getProblemByIdentifier } = require('../services/problemService');
 const Player = require('../structures/Player');
 const logger = require('../utils/logger');
 
@@ -79,11 +79,10 @@ const setupWebSocket = (wss, problems) => {
                         wsPlayer.status = "READY"
 
                         if (game.players.length >= 1 && game.players.every(x => x.status == "READY")) {
-                            game.status = "IN_PROGRESS"
                             logger.log(game.code, "STARTED")
 
                             const problem = getRandomProblem(problems)
-                            game.problem = problem.identifier
+                            game.startGame(problem)
 
                             for (const p of game.players) {
                                 p.ws.send(JSON.stringify({ event: 'GAME_STATUS_UPDATE', status: 'start', problem: problem }))
