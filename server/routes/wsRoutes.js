@@ -62,11 +62,9 @@ const setupWebSocket = (wss, problems) => {
                         return;
                     }
 
-                    const problemJson = problems.find(x => x.identifier == data.problem);
-
                     logger.log(wsPlayer.identifier, game.code, "SEND_CODE")
 
-                    await handleCodeSubmission(wsPlayer, data.code, data.language, problemJson);
+                    await handleCodeSubmission(wsPlayer, data.code, data.language, data.problem);
                     break;
                 }
                 case 'PLAYER_STATUS_UPDATE': {
@@ -75,10 +73,10 @@ const setupWebSocket = (wss, problems) => {
 
                     logger.log(wsPlayer.identifier, game.code, "PLAYER_STATUS_UPDATE", data.status)
 
-                    if (data.status == "READY") {
+                    if (data.status === "READY") {
                         wsPlayer.status = "READY"
 
-                        if (game.players.length >= 1 && game.players.every(x => x.status == "READY")) {
+                        if (game.players.length >= 1 && game.players.every(x => x.status === "READY")) {
                             logger.log(game.code, "STARTED")
 
                             const problem = getRandomProblem(problems)
@@ -88,8 +86,8 @@ const setupWebSocket = (wss, problems) => {
                                 p.ws.send(JSON.stringify({ event: 'GAME_STATUS_UPDATE', status: 'start', problem: problem }))
                             }
                         }
-                    } else if (data.status == "NOT_READY") {
-                        if (game.status == "OPEN") {
+                    } else if (data.status === "NOT_READY") {
+                        if (game.status === "OPEN") {
                             wsPlayer.status = "NOT_READY"
                         }
                     }

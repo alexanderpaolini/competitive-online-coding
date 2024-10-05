@@ -1,24 +1,36 @@
-// src/pages/GamePage.js
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
+import { useParams, useNavigate } from 'react-router-dom';
+import {Button, Container, Row, Col, Navbar} from 'react-bootstrap';
 import MonacoEditor from "react-monaco-editor";
+import Cookies from 'js-cookie';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';  // To enable GitHub-flavored markdown (tables, etc.)
+
 
 function GamePage() {
     const { lobbyCode } = useParams();
     const [code, setCode] = useState('// Write your code here\n'); // Initialize state with default value
-    const [problem, setProblem] = useState('');
+    const [isReadyVisible, setReadyVisible] = useState(true);
+    const [cannotPlay, setCannotPlay] = useState(false);
+    const [wlStatus, setwlStatus] = useState('');
+    const [problemMarkdown, setProblemMarkdown] = useState('');  // To store the markdown content
     const socketRef = useRef(null); // Create a ref to hold the WebSocket instance
     const [isGameStarted, setIsGameStarted] = useState(false); // Track game status
+    const navigate = useNavigate();
+    const playerName = Cookies.get('playerName');
 
     useEffect(() => {
         // Create WebSocket connection once
         socketRef.current = new WebSocket('ws://localhost:3000');
 
+        setProblemMarkdown("# Problem Description\n\nThe problem will be displayed when everyone presses READY");
+
         // Handle WebSocket events
         socketRef.current.onopen = () => {
             console.log('Connected to WebSocket');
-            socketRef.current.send(JSON.stringify({ event:"JOIN_LOBBY", lobby: lobbyCode }));
+            const identifier = Cookies.get("playerName");
+            console.log(identifier);
+            socketRef.current.send(JSON.stringify({ event: "JOIN_LOBBY", lobby: lobbyCode, identifier: identifier }));
         };
 
         socketRef.current.onmessage = (event) => {
@@ -27,9 +39,27 @@ function GamePage() {
 
             // Check for GAME_STATUS_UPDATE and update game state accordingly
             if (data.event === "GAME_STATUS_UPDATE" && data.status === "start") {
-                console.log(data)
-                setProblem(data.problem.identifier);
+                console.log(data);
+                setProblemMarkdown(data.problem.description);  // Fetch the markdown problem description
                 setIsGameStarted(true); // Game has started, make UI visible
+                return
+            }
+
+            if (data.event === "ERROR") {
+                if (data.message === "GAME IN PROGRESS") {
+                    setCannotPlay(true);
+                }
+                return
+            }
+
+            if (data.event === "GAME_STATUS_UPDATE") {
+                if (data.status === "end") {
+                    if (data.result === 'win') {
+                        setwlStatus("WON")
+                    } else if (data.result === 'lose') {
+                        setwlStatus("LOST")
+                    }
+                }
             }
         };
 
@@ -37,6 +67,10 @@ function GamePage() {
             socketRef.current.close(); // Close the socket when the component unmounts
         };
     }, [lobbyCode]);
+
+    const handleGoHome = () => {
+        navigate('/lobby'); // Redirect to lobby page
+    };
 
     function handleCodeChange(newValue) {
         setCode(newValue); // Update the code state with the new value from Monaco editor
@@ -50,7 +84,7 @@ function GamePage() {
             event: "SEND_CODE",
             code: code,
             language: "C",
-            problem: problem
+            problem: problemMarkdown
         };
 
         // Send the code through the existing WebSocket connection
@@ -64,6 +98,8 @@ function GamePage() {
 
     function handleReadyButton(e) {
         e.preventDefault();
+
+        setReadyVisible(false);
 
         // Send a PLAYER_STATUS_UPDATE message
         const message = {
@@ -81,32 +117,116 @@ function GamePage() {
     }
 
     return (
-        <div className={isGameStarted ? "" : "greyed-out"}>
-            <Button onClick={handleReadyButton} disabled={isGameStarted}>
-                READY
-            </Button>
-            <h1>Game: {lobbyCode}</h1>
-            <p>Problem description goes here.</p>
+        <Container>
 
-            <MonacoEditor
-                width="800"
-                height="600"
-                language="c"
-                theme="vs-dark"
-                value={code}
-                onChange={handleCodeChange}
-                options={{
-                    selectOnLineNumbers: true,
-                    readOnly: !isGameStarted, // Disable editor when game hasn't started
-                }}
-                disabled={!isGameStarted}
-            />
+            <Navbar className="justify-content-between">
+                <Navbar.Brand>Game</Navbar.Brand>
+                <Navbar.Text>
+                    Welcome, {playerName}!
+                </Navbar.Text>
+            </Navbar>
 
-            <Button onClick={handleSubmitButton} disabled={!isGameStarted}>
-                Submit
-            </Button>
-        </div>
+            {cannotPlay && (
+                <div
+                    className="d-flex justify-content-center align-items-center"
+                    style={{
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        backgroundColor: "rgba(128, 128, 128, 0.7)",
+                        width: '100vw',
+                        height: '100vh',
+                        zIndex: 1000,
+                    }}
+                >
+                    <div className="text-center">
+                        <h2 style={{ color: 'white' }}>GAME IN PROGRESS</h2>
+                        <Button variant="primary" onClick={handleGoHome}>
+                            GO HOME
+                        </Button>
+                    </div>
+                </div>
+            )}
+
+            {cannotPlay && (
+                <div
+                    className="d-flex justify-content-center align-items-center"
+                    style={{
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        backgroundColor: "rgba(128, 128, 128, 0.7)",
+                        width: '100vw',
+                        height: '100vh',
+                        zIndex: 1000,
+                    }}
+                >
+                    <div className="text-center">
+                        <h2 style={{ color: 'white' }}>GAME OVER. YOU {wlStatus}!</h2>
+                        <Button variant="primary" onClick={handleGoHome}>
+                            GO HOME
+                        </Button>
+                    </div>
+                </div>
+            )}
+
+            <h1 className="text-center my-4">Game Code: {lobbyCode}</h1>
+
+            {/*WE NEED*/}
+            {/*1. When the game is started (i.e. there will be an ERROR sent) it should be greyed out*/}
+            {/*2. When the game is over it should display status (win, loss from websocket) and it should be greyed out or somehting*/}
+            {/*3. A header to display user info if possible. We can start with name at the moment.*/}
+
+             {/*Row for Problem Description and Coding Sandbox*/}
+            <Row>
+                <Col md={6}>
+                    <div style={{backgroundColor: '#f0f0f0', borderRadius: '5px', padding: '10px'}}>
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {problemMarkdown}
+                    </ReactMarkdown>
+                    </div>
+
+                    {isReadyVisible && (<Button
+                        variant="success" // Green button
+                        onClick={handleReadyButton}
+                        disabled={isGameStarted}
+                        className="mt-3"
+                    >
+                        READY
+                    </Button>)}
+                </Col>
+                <Col md={6}>
+                    <MonacoEditor
+                        width="100%"
+                        height="600"
+                        language="c"
+                        theme="vs-dark"
+                        value={code}
+                        onChange={handleCodeChange}
+                        options={{
+                            selectOnLineNumbers: true,
+                            readOnly: !isGameStarted, // Disable editor when game hasn't started
+                        }}
+                        disabled={!isGameStarted}
+                    />
+                    <Button
+                        className="mt-3"
+                        onClick={handleSubmitButton}
+                        disabled={!isGameStarted}
+                    >
+                        Submit
+                    </Button>
+                </Col>
+            </Row>
+        </Container>
     );
 }
 
 export default GamePage;
+
+
+
+
+
+
+

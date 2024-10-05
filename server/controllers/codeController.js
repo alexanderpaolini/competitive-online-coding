@@ -22,7 +22,7 @@ const compileCode = async (code, language, testCases, memoryLimit = 500, timeLim
         });
 
         if (!response.ok) {
-            throw new Error(`Error: ${await response.text()}`);
+            throw (await response.text())
         }
 
         const result = await response.json();
