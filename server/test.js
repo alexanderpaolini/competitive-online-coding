@@ -5,7 +5,7 @@ const ws = new WebSocket('ws://localhost:3000');
 ws.on('open', () => {
     console.log('Connected to the server');
 
-    ws.send(JSON.stringify({ event: 'JOIN_LOBBY', lobby: '1234' }))
+    ws.send(JSON.stringify({ event: 'JOIN_LOBBY', lobby: '1234', identifier: 'PLAYER' }))
 
     ws.send(JSON.stringify({ event: "PLAYER_STATUS_UPDATE", status: 'READY' }))
 

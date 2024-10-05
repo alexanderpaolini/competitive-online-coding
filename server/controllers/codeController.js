@@ -1,5 +1,6 @@
 const config = require("../config/config");
 const Player = require("../structures/Player");
+const logger = require("../utils/logger");
 
 const compileCode = async (code, language, testCases, memoryLimit = 500, timeLimit = 5) => {
     const url = config.codeRunnerURL;
@@ -50,21 +51,24 @@ const handleCodeSubmission = async (player, code, language, problem) => {
         if (result.execution && result.execution.verdict === 'Accepted') {
             player.submissionResponse('pass')
 
+            logger.log(player.identifier, player.currentGame.code, "CODE_RESPONSE", "WIN")
             player.endGame('win')
-
-
+            
+            
             for (const p of player.currentGame.players) {
                 if (p == player) continue
-
+                
                 p.endGame('lose')
             }
-
+            
+            logger.log(player.currentGame.code, "ENDED")
             player.currentGame.endGame()
         } else {
+            logger.log(player.identifier, player.currentGame.code, "CODE_RESPONSE", "FAIL")
             player.submissionResponse('fail')
         }
     } catch (error) {
-        console.log(error)
+        logger.log(player.identifier, player.currentGame.code, "CODE_RESPONSE", "ERROR", error)
         player.submissionResponse('error')
     }
 };

@@ -2,6 +2,7 @@ const { handleCodeSubmission } = require('../controllers/codeController');
 const gameController = require('../controllers/gameController');
 const { getRandomProblem } = require('../services/problemService');
 const Player = require('../structures/Player');
+const logger = require('../utils/logger');
 
 const setupWebSocket = (wss, problems) => {
     // dummy games. WIP
@@ -10,7 +11,7 @@ const setupWebSocket = (wss, problems) => {
 
     wss.on('connection', (ws) => {
         const wsPlayer = new Player(ws)
-        console.log('NEW CLIENT CONNECTED');
+        logger.log('NEW CLIENT CONNECTED');
 
         ws.on('message', async (message) => {
             const { event, ...data } = JSON.parse(message);
@@ -24,7 +25,7 @@ const setupWebSocket = (wss, problems) => {
                 }
                 case 'JOIN_LOBBY': {
                     const game = gameController.findGameByCode(data.lobby);
-
+                    wsPlayer.identifier = data.identifier;
                     if (!game) {
                         wsPlayer.sendError("GAME NOT FOUND")
                         return;
@@ -33,7 +34,7 @@ const setupWebSocket = (wss, problems) => {
                         return;
                     }
 
-                    console.log(wsPlayer.identifier, "JOINED", game.code);
+                    logger.log(wsPlayer.identifier, game.code, "JOINED");
 
                     game.addPlayer(wsPlayer)
                     wsPlayer.currentGame = game
@@ -48,9 +49,18 @@ const setupWebSocket = (wss, problems) => {
                     break;
                 }
                 case 'SEND_CODE': {
-                    if (wsPlayer.currentGame?.status != "IN_PROGRESS") return
+                    const game = wsPlayer.currentGame
+                    if (!game) {
+                        wsPlayer.sendError("GAME NOT FOUND")
+                        return;
+                    } else if (game.status !== "IN_PROGRESS") {
+                        wsPlayer.sendError("GAME NOT IN PROGRESS")
+                        return;
+                    }
 
                     const problemJson = problems.find(x => x.identifier == data.problem);
+
+                    logger.log(wsPlayer.identifier, game.code, "SEND_CODE")
 
                     await handleCodeSubmission(wsPlayer, data.code, data.language, problemJson);
                     break;
@@ -59,11 +69,14 @@ const setupWebSocket = (wss, problems) => {
                     if (!wsPlayer.currentGame) return
                     const game = wsPlayer.currentGame
 
+                    logger.log(wsPlayer.identifier, game.code, "PLAYER_STATUS_UPDATE", data.status)
+
                     if (data.status == "READY") {
                         wsPlayer.status = "READY"
 
                         if (game.players.length >= 1 && game.players.every(x => x.status == "READY")) {
                             game.status = "IN_PROGRESS"
+                            logger.log(game.code, "STARTED")
 
                             const problem = getRandomProblem(problems)
                             game.problem = problem.identifier
@@ -80,7 +93,7 @@ const setupWebSocket = (wss, problems) => {
                     break;
                 }
                 default:
-                    console.log('Unknown message type:', event);
+                    logger.log('Unknown message type:', event);
             }
         });
 
@@ -88,7 +101,7 @@ const setupWebSocket = (wss, problems) => {
             const game = wsPlayer.currentGame
             const playerIndex = game.players.indexOf(ws);
             game.players.splice(playerIndex, 1);
-            console.log(`WebSocket removed from game with code ${game.code}`);
+            logger.log(wsPlayer.identifier, game.code, "LEFT");
         });
     });
 };

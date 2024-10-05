@@ -1,6 +1,10 @@
-const logger = (message) => {
-    const timeStamp = new Date().toISOString();
-    console.log(`[${timeStamp}] ${message}`);
-};
+class Logger {
+    constructor () {}
 
-module.exports = logger;
+    log (...message) {
+        const timeStamp = new Date().toLocaleString();
+        console.log(`[${timeStamp}]`, ...message);
+    }
+}
+
+module.exports = new Logger();

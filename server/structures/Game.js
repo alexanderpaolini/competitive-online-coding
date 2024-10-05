@@ -54,6 +54,10 @@ class Game {
         }
     }
 
+    /**
+     * Returns an exportable object. Just simple for API response
+     * @returns doesn't matter
+     */
     export() {
         return {
             status: this.status,
