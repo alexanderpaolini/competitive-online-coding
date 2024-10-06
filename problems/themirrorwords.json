@@ -1,0 +1,28 @@
+{
+    "title": "The Mirror Words",
+    "testCases": {
+        "testCase1": {
+            "input": "goldfish\n",
+            "expectedOutput": "hsifdlog\n"
+        },
+        "testCase2": {
+            "input": "racecar\n",
+            "expectedOutput": "racecar\n"
+        },
+        "testCase3": {
+            "input": "hello world\n",
+            "expectedOutput": "dlrow olleh\n"
+        },
+        "testCase4": {
+            "input": "Palindrome\n",
+            "expectedOutput": "emordnilaP\n"
+        },
+        "testCase5": {
+            "input": "A man a plan a canal Panama\n",
+            "expectedOutput": "amanaP lanac a nalp a nam A\n"
+        }
+    },
+    "memoryLimit": 500,
+    "timeLimit": 2,
+    "description": "\n# The Mirror Words\n\nWrite a program that reads a single line of input containing a word or a sentence and outputs the reversed version of that input. Each word and sentence should be reversed character by character. The input will only contain lowercase and uppercase letters and spaces. The input length will not exceed 100 characters.\n\n## Example 1\n\nInput:\n\n~~~txt\ngoldfish\n~~~\n\nOutput:\n\n~~~txt\nhsifdlog\n~~~\n\n## Example 2\n\nInput:\n\n~~~txt\nracecar\n~~~\n\nOutput:\n\n~~~txt\nracecar\n~~~\n"
+}

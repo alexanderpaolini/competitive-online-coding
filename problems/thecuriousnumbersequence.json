@@ -1,0 +1,28 @@
+{
+    "title": "The Curious Number Sequence",
+    "testCases": {
+        "testCase1": {
+            "input": "5\n12\n19\n7\n21\n8\n",
+            "expectedOutput": "1\n"
+        },
+        "testCase2": {
+            "input": "3\n2\n4\n6\n",
+            "expectedOutput": "0\n"
+        },
+        "testCase3": {
+            "input": "4\n3\n5\n11\n13\n",
+            "expectedOutput": "0\n"
+        },
+        "testCase4": {
+            "input": "6\n1\n2\n3\n6\n12\n24\n",
+            "expectedOutput": "3\n"
+        },
+        "testCase5": {
+            "input": "7\n5\n10\n20\n3\n6\n2\n4\n",
+            "expectedOutput": "2\n"
+        }
+    },
+    "memoryLimit": 500,
+    "timeLimit": 2,
+    "description": "\n# The Curious Number Sequence\n\nGiven a sequence of positive integers, determine how many numbers in the sequence are immediately followed by a number that is exactly twice the previous number. Your task is to count such occurrences and print the count.\n\n## Example 1\n\nInput:\n\n~~~txt\n5\n12\n19\n7\n21\n8\n~~~\n\nOutput:\n\n~~~txt\n1\n~~~\n\n## Example 2\n\nInput:\n\n~~~txt\n3\n2\n4\n6\n~~~\n\nOutput:\n\n~~~txt\n0\n~~~\n\n## Example 3\n\nInput:\n\n~~~txt\n4\n3\n5\n11\n13\n~~~\n\nOutput:\n\n~~~txt\n0\n~~~\n\n## Additional Test Cases\n\nInput:\n\n~~~txt\n6\n1\n2\n3\n6\n12\n24\n~~~\n\nOutput:\n\n~~~txt\n3\n~~~\n\nInput:\n\n~~~txt\n7\n5\n10\n20\n3\n6\n2\n4\n~~~\n\nOutput:\n\n~~~txt\n2\n~~~"
+}

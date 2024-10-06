@@ -1,0 +1,28 @@
+{
+    "title": "The Encrypted Echo",
+    "testCases": {
+        "testCase1": {
+            "input": "23\nhello\n",
+            "expectedOutput": "olleh\n"
+        },
+        "testCase2": {
+            "input": "4\nworld\n",
+            "expectedOutput": "world\n"
+        },
+        "testCase3": {
+            "input": "10\nprogramming\n",
+            "expectedOutput": "programming\n"
+        },
+        "testCase4": {
+            "input": "11\nexample\n",
+            "expectedOutput": "elpmaxe\n"
+        },
+        "testCase5": {
+            "input": "6\npython\n",
+            "expectedOutput": "python\n"
+        }
+    },
+    "memoryLimit": 500,
+    "timeLimit": 2,
+    "description": "\n# The Encrypted Echo\n\nYou are tasked with creating a program that takes two inputs: a number N and a string. If the number N is odd, the program should reverse the string; if N is even, the program should output the string as is. The inputs are provided in two separate lines, with the first line containing the integer N and the second line containing the string. The length of the string will not exceed 100 characters.\n\n## Example 1\n\nInput:\n\n~~~txt\n23\nhello\n~~~\n\nOutput:\n\n~~~txt\nolleh\n~~~\n\n## Example 2\n\nInput:\n\n~~~txt\n4\nworld\n~~~\n\nOutput:\n\n~~~txt\nworld\n~~~"
+}
