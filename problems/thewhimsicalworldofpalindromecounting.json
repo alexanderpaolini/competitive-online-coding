@@ -1,1 +1,28 @@
-{"title":"The Whimsical World of Palindrome Counting","testCases":{"testCase1":{"input":"3\nabc\naba\nxyz\n","expectedOutput":"1\n"},"testCase2":{"input":"5\nracecar\nlevel\ndog\nmadam\ncat\n","expectedOutput":"3\n"},"testCase3":{"input":"2\nhello\nworld\n","expectedOutput":"0\n"},"testCase4":{"input":"4\nnoon\ncivic\nradar\napple\n","expectedOutput":"3\n"},"testCase5":{"input":"6\na\naa\nab\nba\ncc\ncd\n","expectedOutput":"3\n"}},"memoryLimit":500,"timeLimit":2,"description":"\n# The Whimsical World of Palindrome Counting\n\nIn the mystical land of Palindromia, the citizens are obsessed with palindromes. They believe that palindromes bring good luck and prosperity. As a renowned software wizard, you have been tasked with counting the number of palindromes in a list of strings provided by the Palindromian council. Given an integer `n` followed by `n` strings, write a program to determine how many of these strings are palindromes. A string is considered a palindrome if it reads the same forward and backward. Assume all strings consist of lowercase English letters.\n\n## Input Format\n- The first line contains a single integer `n`, the number of strings.\n- The following `n` lines each contain a string consisting of lowercase English letters.\n\n## Output Format\n- A single line containing an integer, the number of palindromes in the list.\n\n## Example 1\n\nInput:\n\n~~~txt\n3\nabc\naba\nxyz\n~~~\n\nOutput:\n\n~~~txt\n1\n~~~\n\n## Example 2\n\nInput:\n\n~~~txt\n5\nracecar\nlevel\ndog\nmadam\ncat\n~~~\n\nOutput:\n\n~~~txt\n3\n~~~"}
+{
+    "title": "The Whimsical World of Palindrome Counting",
+    "testCases": {
+        "testCase1": {
+            "input": "3\nabc\naba\nxyz\n",
+            "expectedOutput": "1\n"
+        },
+        "testCase2": {
+            "input": "5\nracecar\nlevel\ndog\nmadam\ncat\n",
+            "expectedOutput": "3\n"
+        },
+        "testCase3": {
+            "input": "2\nhello\nworld\n",
+            "expectedOutput": "0\n"
+        },
+        "testCase4": {
+            "input": "4\nnoon\ncivic\nradar\napple\n",
+            "expectedOutput": "3\n"
+        },
+        "testCase5": {
+            "input": "6\na\naa\nab\nba\ncc\ncd\n",
+            "expectedOutput": "3\n"
+        }
+    },
+    "memoryLimit": 500,
+    "timeLimit": 2,
+    "description": "\n# The Whimsical World of Palindrome Counting\n\nIn the mystical land of Palindromia, the citizens are obsessed with palindromes. They believe that palindromes bring good luck and prosperity. As a renowned software wizard, you have been tasked with counting the number of palindromes in a list of strings provided by the Palindromian council. Given an integer `n` followed by `n` strings, write a program to determine how many of these strings are palindromes. A string is considered a palindrome if it reads the same forward and backward. Assume all strings consist of lowercase English letters.\n\n## Input Format\n- The first line contains a single integer `n`, the number of strings.\n- The following `n` lines each contain a string consisting of lowercase English letters.\n\n## Output Format\n- A single line containing an integer, the number of palindromes in the list.\n\n## Example 1\n\nInput:\n\n~~~txt\n3\nabc\naba\nxyz\n~~~\n\nOutput:\n\n~~~txt\n1\n~~~\n\n## Example 2\n\nInput:\n\n~~~txt\n5\nracecar\nlevel\ndog\nmadam\ncat\n~~~\n\nOutput:\n\n~~~txt\n3\n~~~"
+}

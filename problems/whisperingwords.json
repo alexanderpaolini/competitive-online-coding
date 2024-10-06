@@ -1,1 +1,24 @@
-{"title":"Whispering Words","testCases":{"case1":{"input":"5\na\nb\nc\nd\ne\n","expectedOutput":"e d c b a\n"},"case2":{"input":"3\napple\nbanana\ncherry\n","expectedOutput":"cherry banana apple\n"},"case3":{"input":"1\nhello\n","expectedOutput":"hello\n"},"case4":{"input":"4\none\ntwo\nthree\nfour\n","expectedOutput":"four three two one\n"}},"memoryLimit":500,"timeLimit":2,"description":"\n# Whispering Words\n\nYou are given a number N followed by N words, one on each line. Your task is to output these words in reverse order, all on a single line, separated by a space. Each word consists only of lowercase letters. N is between 1 and 100, inclusive. Ensure your solution reads from standard input and writes to standard output.\n\n## Example 1\n\nInput:\n\n~~~txt\n5\na\nb\nc\nd\ne\n~~~\n\nOutput:\n\n~~~txt\ne d c b a\n~~~\n\n## Example 2\n\nInput:\n\n~~~txt\n3\napple\nbanana\ncherry\n~~~\n\nOutput:\n\n~~~txt\ncherry banana apple\n~~~\n"}
+{
+    "title": "Whispering Words",
+    "testCases": {
+        "case1": {
+            "input": "5\na\nb\nc\nd\ne\n",
+            "expectedOutput": "e d c b a\n"
+        },
+        "case2": {
+            "input": "3\napple\nbanana\ncherry\n",
+            "expectedOutput": "cherry banana apple\n"
+        },
+        "case3": {
+            "input": "1\nhello\n",
+            "expectedOutput": "hello\n"
+        },
+        "case4": {
+            "input": "4\none\ntwo\nthree\nfour\n",
+            "expectedOutput": "four three two one\n"
+        }
+    },
+    "memoryLimit": 500,
+    "timeLimit": 2,
+    "description": "\n# Whispering Words\n\nYou are given a number N followed by N words, one on each line. Your task is to output these words in reverse order, all on a single line, separated by a space. Each word consists only of lowercase letters. N is between 1 and 100, inclusive. Ensure your solution reads from standard input and writes to standard output.\n\n## Example 1\n\nInput:\n\n~~~txt\n5\na\nb\nc\nd\ne\n~~~\n\nOutput:\n\n~~~txt\ne d c b a\n~~~\n\n## Example 2\n\nInput:\n\n~~~txt\n3\napple\nbanana\ncherry\n~~~\n\nOutput:\n\n~~~txt\ncherry banana apple\n~~~\n"
+}

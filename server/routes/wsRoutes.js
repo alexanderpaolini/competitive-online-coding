@@ -75,8 +75,12 @@ const setupWebSocket = (wss, problems) => {
                         if (game.players.length >= 1 && game.players.every(x => x.status === "READY")) {
                             logger.log(game.code, "STARTED")
 
-                            const problem = getRandomProblem(problems)
-                            // const problem = await createRandomCodingQuestion()
+                            let problem;
+                            if (process.env.USE_AI)
+                                problem = getRandomProblem(problems)
+                            else
+                                problem = await createRandomCodingQuestion()
+
                             game.startGame(problem)
 
                             for (const p of game.players) {

@@ -1,1 +1,32 @@
-{"title":"The Palindromic Time Converter","testCases":{"testCase1":{"input":"02:30\n","expectedOutput":"03:30\n"},"testCase2":{"input":"11:11\n","expectedOutput":"11:11\n"},"testCase3":{"input":"23:59\n","expectedOutput":"00:00\n"},"testCase4":{"input":"05:40\n","expectedOutput":"06:06\n"},"testCase5":{"input":"13:31\n","expectedOutput":"13:31\n"},"testCase6":{"input":"15:51\n","expectedOutput":"20:02\n"}},"memoryLimit":500,"timeLimit":2,"description":"\n# The Palindromic Time Converter\n\nGiven a 24-hour formatted time, find the next time that is a palindrome when read forwards and backwards. The time is given as input in the format HH:MM. If the input time is already palindromic, return the same time. The palindrome is checked using the time format itself (ignoring the colon). Every time is valid between 00:00 and 23:59. Your task is to output the next palindromic time. The time should wrap around if necessary (i.e., after 23:59, it should go back to 00:00).\n\n## Example 1\n\nInput:\n\n~~~txt\n11:11\n~~~\n\nOutput:\n\n~~~txt\n11:11\n~~~\n\n## Example 2\n\nInput:\n\n~~~txt\n02:30\n~~~\n\nOutput:\n\n~~~txt\n03:30\n~~~"}
+{
+    "title": "The Palindromic Time Converter",
+    "testCases": {
+        "testCase1": {
+            "input": "02:30\n",
+            "expectedOutput": "03:30\n"
+        },
+        "testCase2": {
+            "input": "11:11\n",
+            "expectedOutput": "11:11\n"
+        },
+        "testCase3": {
+            "input": "23:59\n",
+            "expectedOutput": "00:00\n"
+        },
+        "testCase4": {
+            "input": "05:40\n",
+            "expectedOutput": "05:50\n"
+        },
+        "testCase5": {
+            "input": "13:31\n",
+            "expectedOutput": "13:31\n"
+        },
+        "testCase6": {
+            "input": "15:51\n",
+            "expectedOutput": "15:51\n"
+        }
+    },
+    "memoryLimit": 500,
+    "timeLimit": 2,
+    "description": "\n# The Palindromic Time Converter\n\nGiven a 24-hour formatted time, find the next time that is a palindrome when read forwards and backwards. The time is given as input in the format HH:MM. If the input time is already palindromic, return the same time. The palindrome is checked using the time format itself (ignoring the colon). Every time is valid between 00:00 and 23:59. Your task is to output the next palindromic time. The time should wrap around if necessary (i.e., after 23:59, it should go back to 00:00).\n\n## Example 1\n\nInput:\n\n~~~txt\n11:11\n~~~\n\nOutput:\n\n~~~txt\n11:11\n~~~\n\n## Example 2\n\nInput:\n\n~~~txt\n02:30\n~~~\n\nOutput:\n\n~~~txt\n03:30\n~~~"
+}
