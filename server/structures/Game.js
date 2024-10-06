@@ -17,16 +17,9 @@ class Game {
      * @param {WebSocket} player The player's WebSocket connection
      */
     addPlayer(player) {
-        if (this.players.length < 2) {
-            this.players.push(player);
-            if (this.players.length === 2) {
-                this.status = 'IN_PROGRESS';
-            }
-            if (!this.allowedPlayers.includes(player.identifier))
-                this.allowedPlayers.push(player.identifier)
-        } else {
-            throw new Error('Cannot add more players, game is full');
-        }
+        this.players.push(player);
+        if (!this.allowedPlayers.includes(player.identifier))
+            this.allowedPlayers.push(player.identifier)
     }
 
     /**
