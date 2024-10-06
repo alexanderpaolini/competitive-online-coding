@@ -14,14 +14,13 @@ function Home() {
     };
 
     return (
-        <Container className="d-flex justify-content-center align-items-center min-vh-100">
+        <Container fluid className="bg-primary d-flex justify-content-center align-items-center min-vh-100">
             <Card className="p-4" style={{ maxWidth: '500px', width: '100%' }}>
                 <Card.Body>
-                    <Card.Title className="text-center mb-4">Competitive Online Coding</Card.Title>
+                    <Card.Title className="text-center mb-4" style={{ fontFamily: 'Lucida-console, sans-serif', fontSize: '24px' }}>Competitive Online Coding</Card.Title>
                     <Card.Text className="text-center mb-4">1v1 coding. Finish first to win.</Card.Text>
                     <Form>
                         <Form.Group className="mb-3">
-                            <Form.Label>Enter your name</Form.Label>
                             <Form.Control
                                 type="text"
                                 placeholder="Enter your name"
