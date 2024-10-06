@@ -1,14 +1,10 @@
 const { handleCodeSubmission } = require('../controllers/codeController');
 const gameController = require('../controllers/gameController');
-const { getRandomProblem, getProblemByIdentifier, createRandomCodingQuestion } = require('../services/problemService');
+const { getRandomProblem, createRandomCodingQuestion } = require('../services/problemService');
 const Player = require('../structures/Player');
 const logger = require('../utils/logger');
 
 const setupWebSocket = (wss, problems) => {
-    // dummy games. WIP
-    gameController.createGame('1234')
-    gameController.createGame('2345')
-
     wss.on('connection', (ws) => {
         const wsPlayer = new Player(ws)
         logger.log('NEW CLIENT CONNECTED');
@@ -79,6 +75,7 @@ const setupWebSocket = (wss, problems) => {
                         if (game.players.length >= 1 && game.players.every(x => x.status === "READY")) {
                             logger.log(game.code, "STARTED")
 
+                            // const problem = getRandomProblem(problems)
                             const problem = await createRandomCodingQuestion()
                             game.startGame(problem)
 

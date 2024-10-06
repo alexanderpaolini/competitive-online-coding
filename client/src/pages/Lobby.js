@@ -1,19 +1,18 @@
-// src/pages/LobbyPage.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Form, Container, Row, Col, ListGroup, Navbar } from 'react-bootstrap';
 import Cookies from 'js-cookie';
+import { serverBaseURL } from '../config';
 
 function LobbyPage() {
     const [lobbyName, setLobbyName] = useState('');
     const [lobbies, setLobbies] = useState([]);
     const navigate = useNavigate();
-    const playerName = Cookies.get('playerName'); // Retrieve the player name from the cookie
+    const playerName = Cookies.get('playerName');
 
-    // Fetching lobby data
     const fetchLobbies = async () => {
         try {
-            const response = await fetch('http://172.20.10.2:3000/api/games');
+            const response = await fetch(serverBaseURL + '/api/games');
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -24,30 +23,28 @@ function LobbyPage() {
         }
     };
 
-    // Fetch lobbies when the component mounts
+    if (!playerName) navigate('/')
+
     useEffect(() => {
         fetchLobbies();
     }, []);
 
     const handleCreateLobby = async () => {
-        // Create new lobby via POST request
         try {
-            const response = await fetch('http://172.20.10.2:3000/api/games', {
+            const response = await fetch(serverBaseURL + '/api/games', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name: lobbyName }),
+                body: JSON.stringify({ code: lobbyName }),
             });
             if (!response.ok) {
                 throw new Error('Failed to create lobby');
             }
             await response.json();
 
-            // After successfully creating the lobby, clear the input
             setLobbyName('');
 
-            // Fetch the updated list of lobbies after creating a new one
             fetchLobbies();
         } catch (error) {
             console.error('Error creating lobby:', error);
@@ -69,7 +66,6 @@ function LobbyPage() {
 
             <h1 className="text-center my-4">Lobby Selector</h1>
             <Row>
-                {/* Left side - Create Lobby Form */}
                 <Col md={4}>
                     <h2>Create Lobby</h2>
                     <Form>
@@ -92,7 +88,6 @@ function LobbyPage() {
                     </Form>
                 </Col>
 
-                {/* Right side - List of Lobbies */}
                 <Col md={8}>
                     <h2>Available Lobbies</h2>
                     <ListGroup>

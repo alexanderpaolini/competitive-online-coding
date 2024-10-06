@@ -1,54 +1,55 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import {Button, Container, Row, Col, Navbar} from 'react-bootstrap';
+import { Button, Container, Row, Col, Navbar } from 'react-bootstrap';
 import MonacoEditor from "react-monaco-editor";
 import Cookies from 'js-cookie';
 import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';  // To enable GitHub-flavored markdown (tables, etc.)
-
+import remarkGfm from 'remark-gfm';
+import { wsURL } from '../config';
 
 function GamePage() {
     const { lobbyCode } = useParams();
-    const [code, setCode] = useState('// Write your code here\n'); // Initialize state with default value
+    const [code, setCode] = useState('// Write your code here\n');
     const [isReadyVisible, setReadyVisible] = useState(true);
     const [cannotPlay, setCannotPlay] = useState(false);
     const [wlStatus, setwlStatus] = useState('');
     const [playStopped, setPlayStopped] = useState(false);
-    const [problemMarkdown, setProblemMarkdown] = useState('');  // To store the markdown content
-    const socketRef = useRef(null); // Create a ref to hold the WebSocket instance
-    const [isGameStarted, setIsGameStarted] = useState(false); // Track game status
+    const [problemMarkdown, setProblemMarkdown] = useState('');
+    const socketRef = useRef(null);
+    const [isGameStarted, setIsGameStarted] = useState(false);
     const navigate = useNavigate();
     const playerName = Cookies.get('playerName');
 
+    if (!playerName) navigate('/')
+
     useEffect(() => {
-        // Create WebSocket connection once
-        socketRef.current = new WebSocket('ws://172.20.10.2:3000');
+        socketRef.current = new WebSocket(wsURL);
 
         setProblemMarkdown("# Problem Description\n\nThe problem will be displayed when everyone presses READY");
 
-        // Handle WebSocket events
         socketRef.current.onopen = () => {
-            console.log('Connected to WebSocket');
+            console.log('WS CONNECTED');
             const identifier = Cookies.get("playerName");
-            console.log(identifier);
+            console.log("NAME", identifier);
             socketRef.current.send(JSON.stringify({ event: "JOIN_LOBBY", lobby: lobbyCode, identifier: identifier }));
         };
 
         socketRef.current.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            console.log('Message from server:', data);
+            console.log("MESSAGE FROM SERVER", data);
 
-            // Check for GAME_STATUS_UPDATE and update game state accordingly
             if (data.event === "GAME_STATUS_UPDATE" && data.status === "start") {
-                console.log(data);
-                setProblemMarkdown(data.problem.description);  // Fetch the markdown problem description
-                setIsGameStarted(true); // Game has started, make UI visible
+                setProblemMarkdown(data.problem.description);
+                setIsGameStarted(true);
                 return
             }
 
             if (data.event === "ERROR") {
                 if (data.message === "GAME IN PROGRESS") {
                     setCannotPlay(true);
+                }
+                if (data.message === "GAME NOT FOUND") {
+                    navigate('/lobby')
                 }
                 return
             }
@@ -69,24 +70,23 @@ function GamePage() {
         };
 
         return () => {
-            socketRef.current.close(); // Close the socket when the component unmounts
+            socketRef.current.close();
         };
     }, [lobbyCode]);
 
     const handleGoHome = () => {
-        navigate('/lobby'); // Redirect to lobby page
+        navigate('/lobby');
     };
 
     function handleCodeChange(newValue) {
-        setCode(newValue); // Update the code state with the new value from Monaco editor
+        setCode(newValue);
     }
 
     function handleSubmitButton(e) {
         e.preventDefault();
 
-       setPlayStopped(true); 
+        setPlayStopped(true);
 
-        // Prepare the message to send
         const message = {
             event: "SEND_CODE",
             code: code,
@@ -94,7 +94,6 @@ function GamePage() {
             problem: problemMarkdown
         };
 
-        // Send the code through the existing WebSocket connection
         if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
             socketRef.current.send(JSON.stringify(message));
             console.log('Code sent:', message);
@@ -109,16 +108,13 @@ function GamePage() {
         setReadyVisible(false);
         setProblemMarkdown('`loading...`')
 
-        // Send a PLAYER_STATUS_UPDATE message
         const message = {
             event: "PLAYER_STATUS_UPDATE",
             status: "READY"
         };
 
-        // Send the ready status through the existing WebSocket connection
         if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
             socketRef.current.send(JSON.stringify(message));
-            console.log('Ready status sent:', message);
         } else {
             console.error('WebSocket is not open. Ready status not sent:', message);
         }
@@ -171,28 +167,22 @@ function GamePage() {
                 >
                     {wlStatus && (
                         <div className="text-center">
-                        <h2 style={{ color: 'white' }}>GAME OVER. YOU {wlStatus}!</h2>
-                        <Button variant="primary" onClick={handleGoHome}>
-                            GO HOME
-                        </Button>
-                    </div>)}
+                            <h2 style={{ color: 'white' }}>GAME OVER. YOU {wlStatus}!</h2>
+                            <Button variant="primary" onClick={handleGoHome}>
+                                GO HOME
+                            </Button>
+                        </div>)}
                 </div>
             )}
 
             <h1 className="text-center my-4">Game Code: {lobbyCode}</h1>
 
-            {/*WE NEED*/}
-            {/*1. When the game is started (i.e. there will be an ERROR sent) it should be greyed out*/}
-            {/*2. When the game is over it should display status (win, loss from websocket) and it should be greyed out or somehting*/}
-            {/*3. A header to display user info if possible. We can start with name at the moment.*/}
-
-             {/*Row for Problem Description and Coding Sandbox*/}
             <Row>
                 <Col md={6}>
-                    <div style={{backgroundColor: '#f0f0f0', borderRadius: '5px', padding: '10px'}}>
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                        {problemMarkdown}
-                    </ReactMarkdown>
+                    <div style={{ backgroundColor: '#f0f0f0', borderRadius: '5px', padding: '10px' }}>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            {problemMarkdown}
+                        </ReactMarkdown>
                     </div>
 
                     {isReadyVisible && (<Button
@@ -214,7 +204,7 @@ function GamePage() {
                         onChange={handleCodeChange}
                         options={{
                             selectOnLineNumbers: true,
-                            readOnly: !isGameStarted, // Disable editor when game hasn't started
+                            readOnly: !isGameStarted,
                         }}
                         disabled={!isGameStarted}
                     />
