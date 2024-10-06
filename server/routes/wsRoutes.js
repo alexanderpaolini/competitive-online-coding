@@ -1,6 +1,6 @@
 const { handleCodeSubmission } = require('../controllers/codeController');
 const gameController = require('../controllers/gameController');
-const { getRandomProblem, getProblemByIdentifier, createRandomCodingQuestion} = require('../services/problemService');
+const { getRandomProblem, getProblemByIdentifier, createRandomCodingQuestion } = require('../services/problemService');
 const Player = require('../structures/Player');
 const logger = require('../utils/logger');
 
@@ -64,7 +64,7 @@ const setupWebSocket = (wss, problems) => {
 
                     logger.log(wsPlayer.identifier, game.code, "SEND_CODE")
 
-                    await handleCodeSubmission(wsPlayer, data.code, data.language, data.problem);
+                    await handleCodeSubmission(wsPlayer, data.code, data.language, wsPlayer.currentGame.problem);
                     break;
                 }
                 case 'PLAYER_STATUS_UPDATE': {
@@ -79,9 +79,7 @@ const setupWebSocket = (wss, problems) => {
                         if (game.players.length >= 1 && game.players.every(x => x.status === "READY")) {
                             logger.log(game.code, "STARTED")
 
-                            // const problem = getRandomProblem(problems)
                             const problem = await createRandomCodingQuestion()
-                            console.log(problem)
                             game.startGame(problem)
 
                             for (const p of game.players) {

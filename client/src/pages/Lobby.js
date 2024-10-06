@@ -13,7 +13,7 @@ function LobbyPage() {
     // Fetching lobby data
     const fetchLobbies = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/games');
+            const response = await fetch('http://172.20.10.2:3000/api/games');
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -32,7 +32,7 @@ function LobbyPage() {
     const handleCreateLobby = async () => {
         // Create new lobby via POST request
         try {
-            const response = await fetch('http://localhost:3000/api/games', {
+            const response = await fetch('http://172.20.10.2:3000/api/games', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

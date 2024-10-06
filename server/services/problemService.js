@@ -32,7 +32,7 @@ const getRandomProblem = (problems) => {
 const createRandomCodingQuestion = async () => {
     const openai = new OpenAI();
 
-    const prompt = `Generate a random coding problem of medium difficulty.
+    const prompt = `Generate a random coding problem of easy difficulty but make it esoteric so it wouldn't have been seen before.
     The output should be in JSON format with the following structure:
     Be sure that the problem only uses standard in/out and does not have any unnecessary printing.
 
@@ -55,7 +55,10 @@ const createRandomCodingQuestion = async () => {
     2. Only expect to use stdin.E.X. DO NOT provide arrays in the inputs or outputs.
     3. Follow the format of the description exactly.
     4. Remember we are writing programs not functions.
-    5. You must include at least 1-2 examples in the description.`;
+    5. You must include at least 1-2 examples in the description.
+    6. Every problem must be able to be solved in C so for lists the number of items must be predetermined
+    
+    Example Topics: Sorting, Greedy Algorithms, Basic Data Structures (Stacks, Queues, Linked Lists), Recursion, Binary Search, Two Pointers, Prefix Sums, Sliding Window Technique, Basic Dynamic Programming (Knapsack, Fibonacci), String Manipulation (Pattern Matching, Palindromes), Mathematics (GCD, LCM, Modular Arithmetic), Bit Manipulation, Graphs (BFS, DFS), Union-Find (Disjoint Set Union), Counting Problems, Simple Geometry (Lines, Circles, Distance)`;
 
     try {
         const response = await openai.chat.completions.create({

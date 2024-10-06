@@ -13,6 +13,7 @@ function GamePage() {
     const [isReadyVisible, setReadyVisible] = useState(true);
     const [cannotPlay, setCannotPlay] = useState(false);
     const [wlStatus, setwlStatus] = useState('');
+    const [playStopped, setPlayStopped] = useState(false);
     const [problemMarkdown, setProblemMarkdown] = useState('');  // To store the markdown content
     const socketRef = useRef(null); // Create a ref to hold the WebSocket instance
     const [isGameStarted, setIsGameStarted] = useState(false); // Track game status
@@ -21,7 +22,7 @@ function GamePage() {
 
     useEffect(() => {
         // Create WebSocket connection once
-        socketRef.current = new WebSocket('ws://localhost:3000');
+        socketRef.current = new WebSocket('ws://172.20.10.2:3000');
 
         setProblemMarkdown("# Problem Description\n\nThe problem will be displayed when everyone presses READY");
 
@@ -61,6 +62,10 @@ function GamePage() {
                     }
                 }
             }
+
+            if (data.event === "SUBMISSION_RESPONSE") {
+                setPlayStopped(false);
+            }
         };
 
         return () => {
@@ -78,6 +83,8 @@ function GamePage() {
 
     function handleSubmitButton(e) {
         e.preventDefault();
+
+       setPlayStopped(true); 
 
         // Prepare the message to send
         const message = {
@@ -149,7 +156,7 @@ function GamePage() {
                 </div>
             )}
 
-            {cannotPlay && (
+            {(wlStatus || playStopped) && (
                 <div
                     className="d-flex justify-content-center align-items-center"
                     style={{
@@ -162,12 +169,13 @@ function GamePage() {
                         zIndex: 1000,
                     }}
                 >
-                    <div className="text-center">
+                    {wlStatus && (
+                        <div className="text-center">
                         <h2 style={{ color: 'white' }}>GAME OVER. YOU {wlStatus}!</h2>
                         <Button variant="primary" onClick={handleGoHome}>
                             GO HOME
                         </Button>
-                    </div>
+                    </div>)}
                 </div>
             )}
 
