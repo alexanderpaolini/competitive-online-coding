@@ -77,10 +77,10 @@ const setupWebSocket = (wss, problems) => {
 
                             let problem;
                             if (process.env.USE_AI)
-                                problem = getRandomProblem(problems)
-                            else
                                 problem = await createRandomCodingQuestion()
-
+                            else
+                                problem = getRandomProblem(problems)
+                            
                             game.startGame(problem)
 
                             for (const p of game.players) {
