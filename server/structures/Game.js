@@ -44,6 +44,8 @@ class Game {
     endGame() {
         this.problem = '';
         this.status = 'OPEN';
+        this.players = [];
+        this.allowedPlayers = [];
     }
 
     /**

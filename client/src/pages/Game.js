@@ -5,7 +5,7 @@ import MonacoEditor from "react-monaco-editor";
 import Cookies from 'js-cookie';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { wsURL } from '../config';
+import config from '../config';
 
 function GamePage() {
     const { lobbyCode } = useParams();
@@ -23,7 +23,7 @@ function GamePage() {
     if (!playerName) navigate('/')
 
     useEffect(() => {
-        socketRef.current = new WebSocket(wsURL);
+        socketRef.current = new WebSocket(config.wsURL);
 
         setProblemMarkdown("# Problem Description\n\nThe problem will be displayed when everyone presses READY");
 

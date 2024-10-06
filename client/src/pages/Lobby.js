@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Form, Container, Row, Col, ListGroup, Navbar } from 'react-bootstrap';
 import Cookies from 'js-cookie';
-import { serverBaseURL } from '../config';
+import config from '../config';
 
 function LobbyPage() {
     const [lobbyName, setLobbyName] = useState('');
@@ -12,7 +12,7 @@ function LobbyPage() {
 
     const fetchLobbies = async () => {
         try {
-            const response = await fetch(serverBaseURL + '/api/games');
+            const response = await fetch(config.serverBaseURL + '/api/games');
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -31,7 +31,7 @@ function LobbyPage() {
 
     const handleCreateLobby = async () => {
         try {
-            const response = await fetch(serverBaseURL + '/api/games', {
+            const response = await fetch(config.serverBaseURL + '/api/games', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

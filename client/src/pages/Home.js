@@ -26,6 +26,7 @@ function Home() {
                                 placeholder="Enter your name"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
+                                onSubmit={handleStartGame}
                             />
                         </Form.Group>
                         <Button

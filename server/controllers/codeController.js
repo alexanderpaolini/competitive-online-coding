@@ -1,9 +1,8 @@
-const config = require("../config/config");
 const Player = require("../structures/Player");
 const logger = require("../utils/logger");
 
 const compileCode = async (code, language, testCases, memoryLimit = 500, timeLimit = 5) => {
-    const url = config.codeRunnerURL;
+    const url = process.env.CODE_RUNNER_URL;
     const payload = {
         sourcecode: code,
         language: language,
