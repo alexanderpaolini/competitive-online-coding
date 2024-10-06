@@ -6,18 +6,9 @@ const loadProblems = () => {
     const problemsDir = path.join(__dirname, '../../problems');
     const problems = [];
 
-    for (const folder of fs.readdirSync(problemsDir)) {
-        const folderPath = path.join(problemsDir, folder);
-        if (!fs.statSync(folderPath).isDirectory()) continue;
-
-        const dataJsonPath = path.join(folderPath, 'data.json');
-        const descriptionMdPath = path.join(folderPath, 'description.md');
-
-        const dataJson = JSON.parse(fs.readFileSync(dataJsonPath, 'utf-8'));
-        const descriptionMd = fs.readFileSync(descriptionMdPath, 'utf-8');
-
-        dataJson.description = descriptionMd;
-        dataJson.identifier = folder;
+    for (const file of fs.readdirSync(problemsDir)) {
+        const dataJson = JSON.parse(fs.readFileSync(path.join(problemsDir, file), 'utf-8'));
+        dataJson.identifier = file;
 
         problems.push(dataJson);
     }
@@ -78,7 +69,7 @@ const createRandomCodingQuestion = async () => {
     } catch (error) {
         console.error('Error fetching the coding question:', error);
         console.error('Trying again.');
-        return createRandomCodingQuestion(); // Recursively retry on error
+        return createRandomCodingQuestion();
     }
 };
 
