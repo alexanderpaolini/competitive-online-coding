@@ -1,0 +1,94 @@
+\documentclass{article}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+
+\title{MVP WebSocket API Specification}
+\author{Competitive Programming Platform}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{WebSocket Endpoints}
+
+\noindent The API will have a single WebSocket connection that handles sending and receiving events (\texttt{SEND\_CODE}, \texttt{GAME\_STATUS\_UPDATE}, and \texttt{SUBMISSION\_RESPONSE}).
+
+\begin{quote}
+\textbf{WebSocket URL}: \texttt{ws://yourwebsite.com/game}
+\end{quote}
+
+\section{WebSocket Messages}
+
+\subsection{Event 1: SEND\_CODE}
+\begin{itemize}
+    \item \textbf{Description}: This event is triggered when the user submits their code to the server.
+    \item \textbf{Payload}:
+        \begin{verbatim}
+{
+    "event": "SEND_CODE",
+    "data": "#include <stdio.h>\nint main() { printf(\"Hello World\"); return 0; }"
+}
+        \end{verbatim}
+    \item \textbf{Server Behavior}: The server receives the code, executes it in the isolated environment, and checks against test cases. The result (pass/fail) will be sent back in the \texttt{SUBMISSION\_RESPONSE} event.
+\end{itemize}
+
+\subsection{Event 2: GAME\_STATUS\_UPDATE}
+\begin{itemize}
+    \item \textbf{Description}: The server uses this event to notify the client of the current game status, such as the game starting, pausing, or stopping.
+    \item \textbf{Payload}:
+        \begin{verbatim}
+{
+    "event": "GAME_STATUS_UPDATE",
+    "status": "start",
+    "problem": {
+        "title": "Sort Integers",
+        "description": "You are given an integer n followed by n integers. Print them sorted in ascending order.",
+        "input_format": "n followed by n integers",
+        "output_format": "n integers sorted in ascending order"
+    }
+}
+        \end{verbatim}
+    \item \textbf{Client Behavior}: The client should parse the \texttt{status} and update the UI accordingly. For \texttt{start}, the problem is displayed. For \texttt{pause} or \texttt{stop}, the user should see a relevant status update.
+\end{itemize}
+
+\subsection{Event 3: SUBMISSION\_RESPONSE}
+\begin{itemize}
+    \item \textbf{Description}: The server sends this event in response to the user’s code submission, indicating whether the submission was good or bad.
+    \item \textbf{Payload (Good Submission)}:
+        \begin{verbatim}
+{
+    "event": "SUBMISSION_RESPONSE",
+    "result": "good",
+    "message": "All test cases passed!"
+}
+        \end{verbatim}
+    \item \textbf{Payload (Bad Submission)}:
+        \begin{verbatim}
+{
+    "event": "SUBMISSION_RESPONSE",
+    "result": "bad",
+    "message": "Test case 2 failed: expected 10, got 8."
+}
+        \end{verbatim}
+    \item \textbf{Client Behavior}: Based on the \texttt{result}, the client should display whether the code passed or failed, and show any additional details provided by \texttt{message}.
+\end{itemize}
+
+\section{General Flow}
+
+\begin{enumerate}
+    \item \textbf{User submits code}: The client sends a WebSocket message with \texttt{SEND\_CODE}, containing the code as plain text.
+    \item \textbf{Server evaluates code}: The server processes the code in an isolated environment (e.g., Docker container).
+    \item \textbf{Server sends submission response}: The server sends a \texttt{SUBMISSION\_RESPONSE} with the results of the submission (\texttt{good} or \texttt{bad}).
+    \item \textbf{Game status updates}: The server sends \texttt{GAME\_STATUS\_UPDATE} to inform the client about the game’s status (start, pause, stop). The problem description is sent with the \texttt{start} event.
+\end{enumerate}
+
+\section{Questions for Discussion}
+
+\begin{itemize}
+    \item Will the submission include additional metadata (like language type), or are we focusing solely on C code (e.g., \texttt{main.c}) for now?
+    \item How should the server handle invalid code submissions (syntax errors, etc.)? Should the \texttt{SUBMISSION\_RESPONSE} include details about compilation errors or runtime failures?
+    \item Are there any time constraints for code submission? Should the server manage timeouts or allow for unlimited retries?
+\end{itemize}
+
+\end{document}
